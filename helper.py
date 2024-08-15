@@ -20,8 +20,11 @@ def get_json_authcode():
 def generate_six_digit_number():
     return random.randint(100000, 999999)
 
-def write_amount(amount):
-   write_json(json_file="amount.json", data={"amount": amount})
+def write_amount(amount, id):
+   write_json(json_file="amount.json", data={"amount": amount, "id_user": id})
 
 def get_amount():
    return read_json(json_file="amount.json")['amount']
+def get_id_user_amount():
+   data = read_json(json_file="amount.json")['id_user']
+   return data
