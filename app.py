@@ -99,7 +99,7 @@ def check_authtoken(authuser):
 @authtoken
 def finalize_deposit(authuser):
     try:   
-        io.connect(f"{os.getenv("SOCKETIO_SERVER")}")
+        io.connect(socket_io_server)
         io.emit("splitpay-disconnect")
         id_user = get_id_user_amount()  
         amount = get_amount()
