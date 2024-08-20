@@ -18,9 +18,9 @@ cors = CORS(app)
 sio = socketio.AsyncSimpleClient()
 io = socketio.SimpleClient()
 
-
+socket_io_server = os.getenv("SOCKETIO_SERVER") or 'https://splitq-socket-io.onrender.com/'
 async def socketio_connected():
-    await sio.connect(f"{os.getenv("SOCKETIO_SERVER")}")
+    await sio.connect(socket_io_server)
 
 @app.route("/")
 def hello_world():
