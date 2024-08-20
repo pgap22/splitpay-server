@@ -6,10 +6,8 @@ from flask_cors import CORS
 from flask import Flask
 from flask import request
 from helper import generate_six_digit_number,get_json_authcode,write_authcode,get_amount,write_amount,get_id_user_amount
-import time 
 import jwt
 import socketio
-import asyncio
 from prisma import Prisma
 from auth_login import authtoken, valid_authtoken
 
