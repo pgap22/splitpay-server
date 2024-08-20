@@ -72,7 +72,7 @@ async def get_deposit():
         return authuser
     current_amount = get_amount()
     await socketio_connected()
-    data = float(request.json['value'])
+    data = int(request.json['value'])/100
     await sio.emit("splitpay-value-deposit", data)
     write_amount(data+current_amount, authuser['id_user'])
     await sio.disconnect()
