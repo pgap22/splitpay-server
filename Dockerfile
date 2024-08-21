@@ -32,6 +32,6 @@ RUN pip install --user -r requirements.txt
 RUN chmod +x ./start.sh
 
 RUN export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/.local/bin'
-
+EXPOSE 8000
 # Set the default command to run when the container starts
 CMD ["bash", "./start.sh"]
