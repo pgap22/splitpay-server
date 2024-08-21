@@ -4,6 +4,7 @@ blinker==1.8.2
 certifi==2024.7.4
 cffi==1.17.0
 Flask==3.0.3
+Flask[async]
 Flask-Cors==4.0.1
 h11==0.14.0
 httpcore==1.0.5
