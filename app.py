@@ -7,10 +7,11 @@ from flask import Flask
 from flask import request
 from helper import generate_six_digit_number,get_json_authcode,write_authcode,get_amount,write_amount,get_id_user_amount
 import jwt
-import socketio
+import socketio 
 from prisma import Prisma
 from auth_login import authtoken, valid_authtoken
-
+from decimal import Decimal
+print(socketio)
 db = Prisma()
 db.connect()
 app = Flask(__name__)
@@ -18,7 +19,10 @@ cors = CORS(app)
 sio = socketio.AsyncSimpleClient()
 io = socketio.SimpleClient()
 
-socket_io_server = os.getenv("SOCKETIO_SERVER") or 'https://splitq-socket-io.onrender.com/'
+# Socket.IO server URL
+socket_io_server = os.getenv("SOCKETIO_SERVER", 'https://splitq-socket-io.onrender.com/')
+
+
 async def socketio_connected():
     await sio.connect(socket_io_server)
 
@@ -68,11 +72,12 @@ async def get_deposit():
     authuser = valid_authtoken(request)
     if('status' in authuser):
         return authuser
-    current_amount = get_amount()
     await socketio_connected()
-    data = int(request.json['value'])/100
-    await sio.emit("splitpay-value-deposit", data)
-    write_amount(data+current_amount, authuser['id_user'])
+    current_amount = Decimal(str(get_amount()))
+    payload_amount = Decimal(str(request.json['value']))
+    print(str(current_amount+payload_amount))
+    await sio.emit("splitpay-value-deposit", request.json['value'])
+    write_amount(float(current_amount+payload_amount), authuser['id_user'])
     await sio.disconnect()
     return {"message": "OK"}
 
@@ -121,9 +126,12 @@ def finalize_deposit(authuser):
             }, where={
                 "id": id_user
             })
- 
+        write_amount(0,0)
         io.disconnect()
         return {"status": "OK"}
     except Exception as e:
         print(e)
         return {"status": "FAILED", "reason": "SERVER_ERROR"}, 500
+    
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=8000)
